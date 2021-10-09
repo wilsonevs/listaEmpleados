@@ -1,0 +1,56 @@
+create database empleosdb;
+use empleosdb;
+
+create table categorias(
+	id int auto_increment not null primary key,
+	nombre varchar(100) not null,
+	descripcion text
+)engine=InnoDB default charset=utf8;
+
+
+create table vacantes (
+	id int primary key not null auto_increment,
+	nombre varchar(11) not null,
+	descripcion text not null,
+	fecha date,
+	salario double not null,
+	estatus enum ('Creada', 'Aprobada', 'Eliminada') not null,
+	destacado int(11) not null,
+	imagen varchar(250) not null,
+	detalles text not null,
+	idCategoria int(11) not null,
+    CONSTRAINT  fk_CategoriaVacantes FOREIGN KEY (idCategoria) REFERENCES categorias(id) ON DELETE CASCADE ON UPDATE CASCADE
+)engine=InnoDB default charset=utf8;
+
+create table usuarios (
+	id int auto_increment not null primary key,
+    nombre varchar(45) not null,
+    email varchar(100) not null,
+    username varchar(45) not null,
+    password varchar(100) not null,
+    estatus int(111) not null,
+    fechaRegistro date
+)engine=InnoDB default charset=utf8;
+
+create table solicitudes (
+	id int auto_increment not null primary key,
+    fecha date,
+    archivo varchar(250) not null,
+    comentarios text,
+    idVacante int(11),
+    idUsuario int(11),
+    constraint fk_VacanteSolicitudes foreign key (idVacante) references vacantes (id),
+    constraint fk_UsuarioSolicitudes foreign key (idUsuario) references usuarios (id)
+)engine=InnoDB default charset=utf8;
+
+create table perfiles (
+	id int auto_increment not null primary key,
+    perfil varchar(100) not null
+)engine=InnoDB default charset=utf8;
+
+create table usuarioperfil (
+	idUsuario int(11) not null,
+    idPerfil int(11) not null,
+    constraint fk_Usuario_UsuarioPerfil foreign key (idUsuario) references usuarios(id),
+    constraint fk_Perfil_UsuarioPerfil foreign key (idPerfil) references perfiles(id)
+)engine=InnoDB default charset=utf8;
